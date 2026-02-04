@@ -1,0 +1,81 @@
+/* Header */
+.header-bar {
+  background: #1697F6; 
+  color: white;
+  padding: 0 20px;
+}
+
+.header-title {
+  font-weight: bold;
+  font-size: 1.6rem;
+  color: white;
+}
+
+.nav-button {
+  color: white;
+  font-weight: 500;
+  margin-left: 10px;
+  transition: background 0.5s;
+}
+
+.nav-button:hover {
+  background-color: white;
+  color: #1867C0; 
+  border-radius: 6px;
+}
+
+/* Footer */
+.footer {
+  background: linear-gradient(
+    180deg,
+    rgba(174, 221, 255, 0.25),
+    #ffffff
+  );
+  border-top: 1px solid rgba(22, 151, 246, 0.2);
+}
+
+/* Home */
+.home-card {
+  background: linear-gradient(
+    180deg,
+    rgba(174, 221, 255, 0.15),
+    #ffffff
+  );
+}
+
+/* Tabla */
+.datatable-card {
+  background: linear-gradient(
+    180deg,
+    rgba(174, 221, 255, 0.15),
+    #ffffff
+  );
+}
+
+.even-row {
+  background-color: rgba(174, 221, 255, 0.12);
+}
+
+.odd-row {
+  background-color: #ffffff;
+}
+
+tr:hover {
+  background-color: rgba(22, 151, 246, 0.08) !important;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.datatable {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+/* Process */
+
+.process-card {
+  background: linear-gradient(
+  180deg,
+  rgba(174, 221, 255, 0.15),
+  #ffffff
+  );
+}
