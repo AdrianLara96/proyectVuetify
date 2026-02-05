@@ -4,8 +4,12 @@ import 'vuetify/styles'
 
 // Vuetify
 import { createVuetify } from 'vuetify'
+import { VCalendar } from 'vuetify/lib/components'
 
 export default createVuetify({
+  components: {
+    VCalendar,
+  },
   theme: {
     defaultTheme: 'light',
     themes: {

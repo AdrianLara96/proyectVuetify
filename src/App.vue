@@ -1,9 +1,11 @@
 <template>
-  <v-app>
+  <v-app class="app-layout">
     <HeaderComponent></HeaderComponent>
-    <v-main>
+
+    <v-main class="main-content">
       <router-view></router-view>
     </v-main>
+    
     <FooterComponent></FooterComponent>
   </v-app>
 </template>

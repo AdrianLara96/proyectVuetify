@@ -38,69 +38,71 @@
             </v-row>
             
             <!-- Tabla con parámetros -->
-            <v-data-table
-                :headers="headers" 
-                :items="filteredMovies"
-                :loading="loading"
-                loading-text="Cargando películas..."
-                fixed-header
-                height="450"
-                class="datatable elevation-4"
-                density="confortable"
-            >
-                <!-- 
-                * Así lo haríamos en un principio, pero nos encontrmoas con problemas con la configuracion de ESLint
-                * Por lo tanto, vamos a usar un solo slot-item global, en vez de por columnas
-
-                * Añadimos rating personalizado para mejorar visualmente la tabla 
-                <template v-slot:item.vote_average="{ value }">
-                <v-rating
-                    :model-value="value / 2"
-                    color="amber"
-                    readonly
-                    half-increments
-                />
-                </template>
-
-                * Añadimos formato de fecha personalizado 
-                <template v-slot:item.release_date="{ value }">
-                    {{ new Date(value).toLocaleDateString() }}
-                </template>
-                -->
-
-                <!-- Este es el slot:item global que afectará a toda la tabla -->
-                <template v-slot:item="{ item, index }">
-
-                    <!-- item.colums son valores procesados; item contiene el objeto original -->
-                    <tr :class="index % 2 === 0 ? 'even-row' : 'odd-row'">
-                        <td class="font-weight-medium">{{ item.title }}</td>
-
-                        <td> <!-- Formato fechas -->
-                            {{ new Date(item.release_date).toLocaleDateString() }}
-                        </td>
-
-                        <td> <!-- Formato valoración -->
+            <v-card-text class="table-wrapper">
+                <v-data-table
+                        :headers="headers" 
+                        :items="filteredMovies"
+                        :loading="loading"
+                        loading-text="Cargando películas..."
+                        fixed-header
+                        height="450"
+                        class="datatable elevation-4"
+                        density="confortable"
+                    >
+                    <!-- 
+                        * Así lo haríamos en un principio, pero nos encontrmoas con problemas con la configuracion de ESLint
+                        * Por lo tanto, vamos a usar un solo slot-item global, en vez de por columnas
+                        
+                        * Añadimos rating personalizado para mejorar visualmente la tabla 
+                        <template v-slot:item.vote_average="{ value }">
                             <v-rating
+                            :model-value="value / 2"
+                            color="amber"
+                            readonly
+                            half-increments
+                            />
+                        </template>
+                        
+                    * Añadimos formato de fecha personalizado 
+                    <template v-slot:item.release_date="{ value }">
+                        {{ new Date(value).toLocaleDateString() }}
+                    </template>
+                    -->
+                    
+                    <!-- Este es el slot:item global que afectará a toda la tabla -->
+                    <template v-slot:item="{ item, index }">
+                        
+                        <!-- item.colums son valores procesados; item contiene el objeto original -->
+                        <tr :class="index % 2 === 0 ? 'even-row' : 'odd-row'">
+                            <td class="font-weight-medium">{{ item.title }}</td>
+                            
+                            <td> <!-- Formato fechas -->
+                                {{ new Date(item.release_date).toLocaleDateString() }}
+                            </td>
+                            
+                            <td> <!-- Formato valoración -->
+                                <v-rating
                                 :model-value="item.vote_average / 2"
                                 color="amber"
                                 readonly
                                 half-increments
                                 size="small"
-                            />
-                        </td>
-                        <td> <!-- Formato país -->
-                            <v-chip 
+                                />
+                            </td>
+                            <td> <!-- Formato país -->
+                                <v-chip 
                                 :color="item.country === 'Español' ? 'red lighten-2' : 'blue lighten-2'"
                                 variant="flat"
                                 size="small"
                                 class="text-white"
-                            >
+                                >
                                 {{ item.country }}
                             </v-chip>
                         </td>
                     </tr>
                 </template>
             </v-data-table>
+        </v-card-text>
         </v-card>
     </v-container>
 </template>
