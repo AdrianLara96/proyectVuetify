@@ -17,16 +17,32 @@
                 />
             </v-col>
 
-      
+            <!-- Botón: opción xs y opción normal -->
+
+
             <v-col cols="12" sm="6" md="2">
                 <v-btn
+                    v-if="$vuetify.display.xs || $vuetify.display.sm && $vuetify.display.width < 500"
                     color="primary"
                     class="mt-sm-0 mt-2"
                     block
                     @click="searchPokemon"
-                    >
-                    Buscar Pokémon
+                    style="min-height: 48px;"
+                >
+                    <v-icon>mdi-magnify</v-icon>
                 </v-btn>
+
+                <v-btn
+                    v-else
+                    color="primary"
+                    class="mt-sm-0 mt-2"
+                    block
+                    @click="searchPokemon"
+                    style="white-space: normal; padding-top: 8px; padding-bottom: 8px;"
+                >
+                    <span class="text-wrap">Buscar Pokémon</span>
+                </v-btn>
+            
             </v-col>
     
             <v-divider/>
@@ -37,64 +53,104 @@
             </v-col>
 
             <!-- Cards -->
-            <v-col
-                v-for="pokemon in pokemons"
-                :key="pokemon.id"
-                cols="12"
-                sm="6"
-                md="4"
-                lg="3"
-            >
-                <v-card
-                    elevation="6"
-                    rounded="xl"
-                    class="pa-4 text-center hover-card"
-                    @click="openPokemon(pokemon)"
+            <template v-if="pokemons.length > 0">
+                <v-col
+                    v-for="pokemon in pokemons"
+                    :key="pokemon.id"
+                    cols="12"
+                    sm="6"
+                    md="4"
+                    lg="3"
                 >
-                    <v-img
-                        :src="pokemon.image"
-                        height="120"
-                        contain
-                        class="mb-2"
-                    />
+                    <v-card
+                        elevation="6"
+                        rounded="xl"
+                        class="pa-4 text-center hover-card"
+                        @click="openPokemon(pokemon)"
+                    >
+                        <v-img
+                            :src="pokemon.image"
+                            height="120"
+                            contain
+                            class="mb-2"
+                        />
 
-                        <h3 class="text-h6 text-capitalize">
-                            {{ pokemon.name }}
-                        </h3>
+                            <h3 class="text-h6 text-capitalize">
+                                {{ pokemon.name }}
+                            </h3>
 
-                        <div class="my-2">
-                            <v-chip
-                                v-for="type in pokemon.types"
-                                :key="type"
-                                :color="typeColors[type] || 'grey'"
-                                class="ma-1"
-                                size="small"
-                                outlined
-                            >
-                                {{ type }}
+                            <div class="my-2">
+                                <v-chip
+                                    v-for="type in pokemon.types"
+                                    :key="type"
+                                    :color="typeColors[type] || 'grey'"
+                                    class="ma-1"
+                                    size="small"
+                                    variant="outlined"
+                                >
+                                    {{ type }}
+                                </v-chip>
+                            </div>
+
+                            <v-chip variant="outlined" size="small">
+                                #{{ pokemon.id }}
                             </v-chip>
-                        </div>
+                        </v-card>
+                    </v-col>
+                </template>
 
-                        <v-chip variant="outlined" size="small">
-                            #{{ pokemon.id }}
-                        </v-chip>
+                <!-- Mensaje de error si no se encuentra el Pokémon -->
+                <v-col
+                    v-else-if="search && pokemons.length === 0 && !loading"
+                    cols="12"
+                    sm="8"
+                    offset-sm="2"
+                    md="6"
+                    offset-md="3"
+                >
+                    <v-card class="pa-6 text-center elevation-4">
+                        <v-card-title class="text-h6 text--primary">
+                            Pokémon no encontrado
+                        </v-card-title>
+                        <v-card-text class="text-body-1">
+                            No se encontró ningún Pokémon con el nombre "{{ search }}".
+                        </v-card-text>
+                        <v-icon size="64" color="warning">
+                            mdi-alert-circle-outline
+                        </v-icon>
                     </v-card>
                 </v-col>
 
-            <!-- Paginación -->
-            <v-col cols="12" class="d-flex justify-center mt-6">
-                <v-pagination
-                    v-model="page"
-                    :length="totalPages"
-                    :total-visible="smAndDown ? 3 : 5"
-                    :show-first-last-page="!smAndDown"
-                    :show-prev-next="!smAndDown"
-                    size="small"
-                    rounded
-                    @update:model-value="fetchPokemons"
-                />
-            </v-col>
+                <!-- Contador de páginas -->
+                <v-col cols="12" class="d-flex justify-center mt-6">
+                    <div class="text-body-2">
+                    Página {{ currentPage }} de {{ totalPages }}
+                    </div>
+                </v-col>
+                <!-- Controles de paginación -->
+                <v-col cols="12" class="d-flex justify-center mt-2">
+                    <v-btn
+                        :disabled="!previousUrl"
+                        @click="fetchByUrl(previousUrl)"
+                        color="secondary"
+                        variant="outlined"
+                        class="mx-2"
+                    >
+                        <v-icon v-if="$vuetify.display.xs">mdi-chevron-left</v-icon>
+                        <span v-else>Anterior</span>
+                    </v-btn>
 
+                    <v-btn
+                        :disabled="!nextUrl"
+                        @click="fetchByUrl(nextUrl)"
+                        color="primary"
+                        variant="flat"
+                        class="mx-2"
+                    >
+                        <v-icon v-if="$vuetify.display.xs">mdi-chevron-right</v-icon>
+                        <span v-else>Siguiente</span>
+                    </v-btn>
+                </v-col>
         </v-row>
     </v-container>
     <v-dialog v-model="dialog" max-width="500">
@@ -173,21 +229,22 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
-import { useDisplay } from 'vuetify/lib/composables/display'
+import { ref, onMounted } from 'vue'
+
 
 const pokemons = ref([])
 const search = ref('')
 const loading = ref(false)
-
 const dialog = ref(false)
 const selectedPokemon = ref(null)
 
-const page = ref(1)
-const limit = 12
-const totalPages = 10 // configurable
+// Estados para la paginación con los enlaces que proporciona la API
+const nextUrl = ref(null)
+const previousUrl = ref(null)
+const currentPage = ref(1)
+const totalPages = ref(1)
 
-const { smAndDown } = useDisplay()
+const limit = 16    // Definimos el tamaño de página
 
 // definimos mapa de colores por tipo
 const typeColors = {
@@ -211,22 +268,28 @@ const typeColors = {
     fairy: '#D685AD'
 }
 
+onMounted(() => {
+    fetchByUrl('https://pokeapi.co/api/v2/pokemon')
+})
 
-onMounted(fetchPokemons)
+async function fetchByUrl(url) {
+    if (!url) return
 
-watch(page, fetchPokemons)
-
-async function fetchPokemons() {
     loading.value = true
     pokemons.value = []
 
-    const offset = (page.value - 1) * limit
-
     try {
-        const res = await fetch(
-            `https://pokeapi.co/api/v2/pokemon?limit=${limit}&offset=${offset}`
-        )
+        const res = await fetch(url)
         const data = await res.json()
+
+        // Actualizamos los enlaces de la paginación
+        nextUrl.value = data.next
+        previousUrl.value = data.previous 
+
+        // Calculamos página actual y total
+        const offset = new URLSearchParams(new URL(url).search).get('offset') || 0
+        currentPage.value = Math.floor(offset / limit) + 1
+        totalPages.value = Math.ceil(data.count / limit)
 
         const detailed = await Promise.all(
             data.results.map(p => fetch(p.url).then(r => r.json()))
@@ -247,8 +310,9 @@ async function fetchPokemons() {
 
 async function searchPokemon() {
     if (!search.value) {
-        page.value = 1
-        fetchPokemons()
+        
+        // Si limpiamos búsqueda, volvemos a la primera página
+        fetchByUrl('https://pokeapi.co/api/v2/pokemon/')
         return
     }
 

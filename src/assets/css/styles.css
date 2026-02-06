@@ -126,8 +126,14 @@ tr:hover {
 .hover-card {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
+
 .hover-card:hover {
   transform: translateY(-6px);
+}
+
+.wrap-btn {
+  white-space: normal !important;
+  line-height: normal !important;
 }
 
 /* Process */
