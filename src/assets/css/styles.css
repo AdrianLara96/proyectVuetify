@@ -68,6 +68,56 @@
   );
 }
 
+/* Fondo de la tab activa en color secondary más oscuro */
+.weather-tabs .v-tab--selected {
+  background-color: rgb(var(--v-theme-secondary)) !important;
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+.weather-tabs .v-slide-group-item--active .v-tab-slider {
+  opacity: 0 !important;
+}
+
+/* Calendario */
+
+.floating-button-container {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999; 
+}
+
+.floating-button-container :deep(.v-btn) {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3) !important;
+}
+
+
+/* Clima (colores para las temperaturas */
+.v-card {
+  border-radius: 16px;
+}
+
+.text-blue {
+  color: rgb(var(--v-theme-blue));
+}
+
+.text-cyan {
+  color: rgb(var(--v-theme-cyan));
+}
+
+.text-green {
+color: rgb(var(--v-theme-green));
+}
+
+.text-orange {
+  color: rgb(var(--v-theme-orange));
+}
+
+.text-red {
+  color: rgb(var(--v-theme-red));
+}
+
 /* Tabla */
 .datatable-card {
   background: linear-gradient(
@@ -93,33 +143,6 @@ tr:hover {
 .datatable {
   border-radius: 12px;
   overflow: hidden;
-}
-
-/* Calendario */
-.calendar-card {
-  background: linear-gradient(
-    180deg,
-    rgba(174, 221, 255, 0.15),
-    #ffffff
-  );
-}
-
-.event-cell {
-  padding: 8px 12px;
-  border-radius: 4px;
-  background-color: rgba(22, 151, 246, 0.15);
-  font-size: 0.85rem;
-  text-align: center;
-  cursor: pointer;
-  overflow: hidden;       
-  white-space: normal;    
-}
-
-
-@media (max-width: 768px) {
-  .event-title {
-    display: none; /* Ocultamos título en móviles porque no se lee bien */
-  }
 }
 
 /* Pokemon */
